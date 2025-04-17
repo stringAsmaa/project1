@@ -21,7 +21,7 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-# 👇 هذا السطر مهم يجي بعد composer install
+# نسخ ملف .env من المثال (قبل أوامر artisan)
 COPY .env.example .env
 
 EXPOSE 10000
