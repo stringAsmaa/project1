@@ -21,6 +21,9 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
+# 👇 هذا السطر مهم يجي بعد composer install
+COPY .env.example .env
+
 EXPOSE 10000
 
 CMD php artisan config:clear && \
