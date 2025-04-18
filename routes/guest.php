@@ -18,6 +18,7 @@ Route::post('/register/{role}', [RegisteredUserController::class, 'store'])
                 ->middleware('guest')
                 ->name('register');
 
+                
                 Route::post('/code', [RegisteredUserController::class, 'put_code'])->middleware('guest');
 
 
@@ -33,7 +34,7 @@ Route::post('/register/{role}', [RegisteredUserController::class, 'store'])
                 Route::post('/forgotPassword', [AuthenticatedSessionController::class, 'forgot_password'])
                 ->middleware('guest','status');
 
-                
+
 
                 Route::post('/code4password', [AuthenticatedSessionController::class, 'code_4_password']);
 
@@ -48,7 +49,7 @@ Route::post('/register/{role}', [RegisteredUserController::class, 'store'])
 
 
 
-   
+
                     //socialite
                   Route::controller(SocialiteController::class)->prefix('auth/google')->group(function(){
 
@@ -63,11 +64,11 @@ Route::post('/register/{role}', [RegisteredUserController::class, 'store'])
                     Route::post('/send',[chatController::class,'send']);
                     Route::get('/show-messages',[chatController::class,'show_messages']);
                     Route::post('/search',[chatController::class,'search']);
-    
+
                     Route::post('/put-favourite',[chatController::class,'favourite']);
-    
+
                     Route::get('/get-favourite',[chatController::class,'get_favourite']);
-    
+
 
                 });
 
@@ -110,13 +111,13 @@ Route::post('/register/{role}', [RegisteredUserController::class, 'store'])
                 ->middleware(['auth:sanctum','role:job_seeker']);
 
 
-              
+
 
                 Route::post('/save_posts',[crudController::class,'save_posts'])
                 ->middleware(['auth:sanctum','role:job_seeker']);
 
 
-                
+
                 Route::get('/show_save_posts',[crudController::class,'show_save_posts'])
                 ->middleware(['auth:sanctum','role:job_seeker']);
 
@@ -126,8 +127,8 @@ Route::post('/register/{role}', [RegisteredUserController::class, 'store'])
                 ->middleware(['auth:sanctum']);
 
                 Route::get('/category',[crudController::class,'category']);
-                
-                Route::get('/show_company',[crudController::class,'show_company']) 
+
+                Route::get('/show_company',[crudController::class,'show_company'])
               ;
 
 
@@ -139,8 +140,8 @@ Route::post('/register/{role}', [RegisteredUserController::class, 'store'])
                 ->middleware(['auth:sanctum','role:job_seeker']);
 
                 Route::get('/show_all_skills_locations_experience',[crudController::class,'show_all_skills_locations_experience']);
-                
-                
+
+
 
                 Route::post('/choose_a_post',[crudController::class,'choose_a_post'])
                 ->middleware(['auth:sanctum','role:job_seeker']);
