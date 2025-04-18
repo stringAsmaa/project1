@@ -13,12 +13,14 @@ use App\Http\Controllers\SocialiteController;
 use Illuminate\Support\Facades\Route;
 
 
+
+
 //logins
 Route::post('/register/{role}', [RegisteredUserController::class, 'store'])
                 ->middleware('guest')
                 ->name('register');
 
-                
+
                 Route::post('/code', [RegisteredUserController::class, 'put_code'])->middleware('guest');
 
 
