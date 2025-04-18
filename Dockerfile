@@ -19,10 +19,9 @@ WORKDIR /var/www
 
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+RUN rm -rf bootstrap/cache/*.php
 
-# نسخ ملف .env من المثال (قبل أوامر artisan)
-COPY .env.example .env
+RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 10000
 
@@ -31,7 +30,5 @@ CMD php artisan config:clear && \
     php artisan route:cache && \
     php artisan view:cache && \
     php artisan key:generate && \
-    php artisan mi:f  && \
-    php artisan db:seed &&\
-    php artisan serve --host=0.0.0.0 --port=10000
-
+    php artisan migrate:fresh --seed && \
+    php-fpm
