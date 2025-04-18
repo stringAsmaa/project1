@@ -11,14 +11,19 @@ RUN apt-get update && apt-get install -y \
     git \
     curl
 
-    
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-COPY . .
+COPY . . # هذه الخطوة تنسخ جميع الملفات، بما في ذلك .env.example
+
+# الخطوة الهامة: نسخ ملف .env (أو إنشاء واحد جديد إذا لم يكن موجودًا)
+COPY .env .env # تأكد من وجود ملف .env في مجلد مشروعك
+
+# أو بدلًا من نسخ .env مباشرةً، يمكنك إنشاء واحد جديد داخل الحاوية:
+# RUN cp .env.example .env
 
 RUN rm -rf bootstrap/cache/*.php
 
