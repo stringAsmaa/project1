@@ -1,34 +1,39 @@
+# Use PHP 8.2 FPM as base image
 FROM php:8.2-fpm
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    build-essential \
+    git \
+    unzip \
+    curl \
     libpng-dev \
-    libjpeg-dev \
     libonig-dev \
     libxml2-dev \
+    libzip-dev \
     zip \
-    unzip \
-    git \
-    curl
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
 
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Set working directory
 WORKDIR /var/www
 
+# Copy project files
 COPY . .
 
-RUN composer install --no-dev --optimize-autoloader
+# Install PHP dependencies
+RUN composer install --optimize-autoloader --no-dev
 
-# ✅ أوامر Laravel المهمة
-RUN php artisan config:clear
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
-RUN php artisan key:generate
-RUN php artisan migrate:fresh --force || true
-RUN php artisan db:seed
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 775 storage bootstrap/cache
+
+# Expose port 10000
 EXPOSE 10000
 
-CMD php artisan serve --host=0.0.0.0 --port=10000
+# Entrypoint script to run migrations & start Laravel server
+CMD php artisan config:cache && \
+    php artisan migrate:fresh --force && \
+    php artisan db:seed --force && \
+    php artisan serve --host=0.0.0.0 --port=10000
