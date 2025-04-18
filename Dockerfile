@@ -17,24 +17,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-COPY . . # هذه الخطوة تنسخ جميع الملفات، بما في ذلك .env.example
-
-# الخطوة الهامة: نسخ ملف .env (أو إنشاء واحد جديد إذا لم يكن موجودًا)
-COPY .env .env # تأكد من وجود ملف .env في مجلد مشروعك
-
-# أو بدلًا من نسخ .env مباشرةً، يمكنك إنشاء واحد جديد داخل الحاوية:
-# RUN cp .env.example .env
-
-RUN rm -rf bootstrap/cache/*.php
+COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
+# ✅ أوامر Laravel المهمة
+RUN php artisan config:clear
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
+RUN php artisan key:generate
+RUN php artisan migrate:fresh --force || true
+RUN php artisan db:seed
 EXPOSE 10000
 
-CMD php artisan config:clear && \
-    php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache && \
-    php artisan key:generate && \
-    php artisan migrate:fresh --seed && \
-    php-fpm
+CMD php artisan serve --host=0.0.0.0 --port=10000
